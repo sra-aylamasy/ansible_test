@@ -1,0 +1,20 @@
+- name: Run Oracle OPatch commands
+  hosts: test
+  become: yes
+  become_user: oracle
+  become_flags: "-i"
+  tasks:
+    - name: Run OPatch version and list patches
+      shell: |
+        . ~/.bash_profile
+        export PATH=$PATH:$ORACLE_HOME/OPatch
+        opatch version
+        opatch lspatches
+      args:
+        executable: /bin/bash
+      register: opatch_result
+      changed_when: false
+
+    - name: Show OPatch output
+      debug:
+        var: opatch_result.stdout_lines
